@@ -3,6 +3,7 @@ class parseRestClient{
 	
 	private $appid = '';
 	private $restkey = '';
+	private $sesstoken = '';
 	private $parseUrl = 'https://api.parse.com/1/classes/';
 
 
@@ -14,7 +15,8 @@ class parseRestClient{
 	public function __construct($config){
 		if(isset($config['appid']) && isset($config['restkey'])){
 			$this->appid = $config['appid'];
-			$this->restkey = $config['restkey'];			
+			$this->restkey = $config['restkey'];
+			$this->sesstoken = $config['sesstoken'];
 		}
 		else{
 			die('You must include your Application Id and REST Key');
@@ -28,15 +30,29 @@ class parseRestClient{
  * 
  */	
 	private function request($args){
+echo "<br />function request args!!! :<br />";
+print_r ($args);
+echo "<br />";
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_TIMEOUT, 5);
 		curl_setopt($c, CURLOPT_USERAGENT, 'parseRestClient/1.0');
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+
+		if(empty($this->sesstoken)) {
 		curl_setopt($c, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json',
 			'X-Parse-Application-Id: '.$this->appid,
-			'X-Parse-REST-API-Key: '.$this->restkey
+			'X-Parse-REST-API-Key: '.$this->restkey,
 		));
+		} else {
+
+		curl_setopt($c, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'X-Parse-Application-Id: '.$this->appid,
+			'X-Parse-REST-API-Key: '.$this->restkey,
+			'X-Parse-Session-Token: '.$this->sesstoken
+		));
+		}
 		curl_setopt($c, CURLOPT_CUSTOMREQUEST, $args['method']);
 		curl_setopt($c, CURLOPT_URL, $this->parseUrl . $args['url']);
 		
