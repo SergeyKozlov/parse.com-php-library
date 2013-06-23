@@ -30,9 +30,6 @@ class parseRestClient{
  * 
  */	
 	private function request($args){
-echo "<br />function request args!!! :<br />";
-print_r ($args);
-echo "<br />";
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_TIMEOUT, 5);
 		curl_setopt($c, CURLOPT_USERAGENT, 'parseRestClient/1.0');
